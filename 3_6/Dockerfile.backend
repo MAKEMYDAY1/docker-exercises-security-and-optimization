@@ -3,7 +3,7 @@ WORKDIR /usr/src/app
 COPY code/example-backend .
 RUN useradd -m appuser && chown -R appuser:appuser /usr/src/app
 USER appuser
-RUN go mod download && go test ./... && go build -v -o app ./
+RUN go mod download && go test ./... && go build -v -o app ./ && go clean -cache
 EXPOSE 8080
 ENV REQUEST_ORIGIN=http://localhost:5001
 ENV PORT=8080

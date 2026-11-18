@@ -1,11 +1,11 @@
 FROM ubuntu:24.04
 WORKDIR /usr/src/app
 COPY --chown=appuser:appuser code/example-frontend .
+ENV REACT_APP_BACKEND_URL=http://localhost:8080/
 RUN apt-get update -y && apt-get install -y curl && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
 apt-get install -y nodejs && useradd -m appuser && chown -R appuser:appuser /usr/src/app && node -v && \ 
 npm -v && npm install && npm run build && npm install -g serve && rm -rf src && rm -rf /var/lib/apt/lists/*
 USER appuser
 EXPOSE 5001
-ENV REACT_APP_BACKEND_URL=http://localhost:8080/
 CMD ["serve", "-s", "-l", "5001", "build"]
  

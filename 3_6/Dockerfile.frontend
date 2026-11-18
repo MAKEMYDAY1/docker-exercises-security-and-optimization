@@ -1,15 +1,14 @@
 FROM ubuntu:24.04
 WORKDIR /usr/src/app
 RUN apt-get update -y && apt-get install -y curl && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
-apt-get install -y nodejs && useradd -m appuser && chown -R appuser:appuser /usr/src/app
+apt-get install -y nodejs && useradd -m appuser && chown -R appuser:appuser /usr/src/app && node -v && \ 
+npm -v && npm install && npm run build && npm install -g serve 
 USER appuser
 COPY --chown=appuser:appuser code/example-frontend .
-RUN node -v && npm -v && npm install
+node -v && npm -v && npm install
 EXPOSE 5001
 ENV REACT_APP_BACKEND_URL=http://localhost:8080/
-RUN npm run build
 USER root
-RUN npm install -g serve
 
 USER appuser
 

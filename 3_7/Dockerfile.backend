@@ -1,9 +1,14 @@
-FROM golang:tip-alpine3.24
+FROM golang:1.27-alpine
+
 WORKDIR /usr/src/app
 COPY code/example-backend .
-RUN useradd -m appuser && chown -R appuser:appuser /usr/src/app
-USER appuser
+
+RUN addgroup -S appuser && adduser -S -G appuser -h /home/appuser appuser && \
+    chown -R appuser:appuser /usr/src/app
+
 RUN go mod download && go test ./... && go build -v -o app ./ && go clean -modcache
+
+USER appuser
 EXPOSE 8080
 ENV REQUEST_ORIGIN=http://localhost:5001
 ENV PORT=8080

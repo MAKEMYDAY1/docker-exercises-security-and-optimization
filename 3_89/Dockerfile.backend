@@ -1,0 +1,23 @@
+FROM golang:1.27-alpine AS builder
+
+WORKDIR /usr/src/app
+
+COPY code/example-backend .
+
+RUN go mod download && go test ./...
+
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /app .
+
+FROM scratch
+
+COPY --from=builder /app /app
+
+USER 10001:10001
+
+EXPOSE 8080
+
+ENV REQUEST_ORIGIN=http://localhost:5001
+
+ENV PORT=8080
+
+CMD ["./app"]
